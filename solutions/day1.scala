@@ -1,5 +1,5 @@
 //> using file inputs.scala
-
+package day1
 import utils.readFile
 
 def splitLists(): (List[Int], List[Int]) =

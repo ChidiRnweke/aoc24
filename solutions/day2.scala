@@ -1,4 +1,7 @@
 //> using file "inputs.scala"
+
+package day2
+
 import utils.readFile
 
 def isSafe(line: Vector[Int]): Boolean =
