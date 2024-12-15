@@ -25,6 +25,14 @@ def evalMatrix(matrix: List[List[Char]]): Int =
       evalPosition(matrix, rowIdx, colIdx, nRows, nCols)
   values.map(_.sumAll).sumAll
 
+def evalMatrix2(matrix: List[List[Char]]): Int =
+  val nRows = matrix.length
+  val nCols = matrix(0).length
+  val values = matrix.mapWithIndex: (rows, rowIdx) =>
+    rows.mapWithIndex: (_, colIdx) =>
+      evalMove2(matrix, rowIdx, colIdx, nRows, nCols)
+  values.map(_.sumAll).sumAll
+
 def evalPosition(
     matrix: List[List[Char]],
     row: Int,
@@ -68,20 +76,35 @@ def foundXMAS(sequence: List[Char]): Int =
     case 'S' :: 'A' :: 'M' :: 'X' :: Nil => 1
     case _                               => 0
 
+def foundXMASCross(seq1: List[Char], seq2: List[Char]): Int =
+  (seq1, seq2) match
+    case ('M' :: 'A' :: 'S' :: Nil, 'S' :: 'A' :: 'M' :: Nil) => 1
+    case ('M' :: 'A' :: 'S' :: Nil, 'M' :: 'A' :: 'S' :: Nil) => 1
+    case ('S' :: 'A' :: 'M' :: Nil, 'S' :: 'A' :: 'M' :: Nil) => 1
+    case ('S' :: 'A' :: 'M' :: Nil, 'M' :: 'A' :: 'S' :: Nil) => 1
+    case _                                                    => 0
+
+def evalMove2(
+    matrix: List[List[Char]],
+    row: Int,
+    col: Int,
+    numRows: Int,
+    numCols: Int
+): Int =
+  if row + 3 <= numRows && col + 3 <= numCols then
+    val seq1 = (0 until 3).map(i => matrix(row + i)(col + i)).toList
+    val seq2 =
+      (0 until 3)
+        .zip((0 until 3).reverse)
+        .map((i, j) => matrix(row + i)(col + j))
+        .toList
+    println(s"seq1: $seq1, seq2: $seq2")
+    foundXMASCross(seq1, seq2)
+  else 0
+
 @main def day4 =
-  val testData = """MMMSXXMASM
-                    |MSAMXMSMSA
-                    |AMXSXMAAMM
-                    |MSAMASMSMX
-                    |XMASAMXAMM
-                    |XXAMMXXAMA
-                    |SMSMSASXSS
-                    |SAXAMASAAA
-                    |MAMMMXMMMM
-                    |MXMXAXMASX""".stripMargin
-    .split("\n")
-    .map(_.toCharArray().toList)
-    .toList
 
   val ex1 = evalMatrix(readData())
+  val ex2 = evalMatrix2(readData())
   println(ex1)
+  println(ex2)
